@@ -28,7 +28,7 @@ export default (bot) => {
             const keyboard = Markup.inlineKeyboard([
 
                 [Markup.button.callback("🛒 Buy", `BUY_PRODUCT_${product.id}`)],
-                [Markup.button.callback("↩️ Back", "SHOW_PRODUCTS_0")],
+                [Markup.button.callback("↩️ Back", "SHOW_USER_PRODUCTS_0")],
             ]);
 
             await ctx.editMessageCaption(text, { parse_mode: "Markdown", ...keyboard });
