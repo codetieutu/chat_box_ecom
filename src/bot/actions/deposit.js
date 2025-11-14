@@ -58,7 +58,8 @@ Example: 0xdd37bc11ac4c97145c788648823d3326d1b74569363abd086dce84b0037242e7
     bot.action("DEPOSIT_ENTER_TXID", async (ctx) => {
         await ctx.answerCbQuery();
         ctx.session = ctx.session || {};
-        ctx.session.time = Date.now();
+        ctx.session.time = Date.now() / 1000;
+
         ctx.session.step = "waiting_txid";
 
         await ctx.reply("🔍 Please enter your *Transaction hash or Transaction ID *:", {

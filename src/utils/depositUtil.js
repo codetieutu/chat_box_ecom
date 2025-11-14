@@ -3,11 +3,11 @@ import { db } from "./database.js";
 const addTransaction = async (tx) => {
     const {
         tx_hash,
-        from_address,
-        to_address,
+        from,
+        to,
         amount,
-        coin,
-        time,
+        token,
+        timestamp,
         network = "BNB Smart Chain",
     } = tx;
 
@@ -28,7 +28,7 @@ const addTransaction = async (tx) => {
             `INSERT INTO transactions 
        (tx_hash, from_address, to_address, amount, coin, time, network) 
        VALUES (?, ?, ?, ?, ?, ?, ?)`,
-            [tx_hash, from_address, to_address, amount, coin, time, network]
+            [tx_hash, from, to, amount, token, timestamp, network]
         );
 
         console.log(`✅ Giao dịch ${tx_hash} đã được thêm vào database.`);

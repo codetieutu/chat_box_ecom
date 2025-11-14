@@ -165,6 +165,7 @@ const inputTxId = async (ctx) => {
         ctx.reply("Transaction not found, Please re-enter.");
         return;
     }
+    transaction.tx_hash = txid;
     const amount = parseFloat(transaction.amount);
     const user = await getUserById(ctx.from.id);
     if (!user) {
@@ -185,9 +186,13 @@ const inputTxId = async (ctx) => {
     const message = `📢 *New Deposit Received!*\n\n👤 User: @${user.username}\n💰 Amount: ${amount} $`;
 
     await notifyAdmin(message);
-    await addTransaction(transaction);
-    ctx.session.time = null
+    try {
+        await addTransaction(transaction);
+    } catch (error) {
+        console.error(">>check err", error);
+    }
 
+    ctx.session.time = null
     ctx.session.step = null;
 }
 
