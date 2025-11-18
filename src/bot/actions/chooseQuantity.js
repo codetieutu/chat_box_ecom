@@ -26,6 +26,7 @@ export default (bot) => {
             price: Number(variant.price) || 0,
             quantity: Number(variant.quantity) || 0, // stock
             type: variant.type || "available",
+            description: variant.description,
             currenQuan: 1,                            // số lượng mặc định
             backAction: `USER_PRODUCT_${variant.product_id}` // callback quay lại màn product
         };
@@ -48,7 +49,8 @@ export default (bot) => {
 ├ <b>Price per item:</b> ${state.price.toLocaleString()} $
 ├ <b>Quantity:</b> ${state.currenQuan}
 ├ <b>Total Payment:</b> <b>${totalPayment.toLocaleString()} $</b>
-└ <b>Available stock:</b> ${state.quantity} account
+├ <b>Available stock:</b> ${state.quantity} account
+└ <b>Description:</b> ${state.description}
         `.trim();
 
         const keyboard = Markup.inlineKeyboard([

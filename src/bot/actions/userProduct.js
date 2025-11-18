@@ -38,30 +38,22 @@ export default (bot) => {
 
             // Format message text
             let text = `🏷️ *${product.name}*\n`;
-            text += `💰 *Price:* ${priceText}\n`;
             text += `📦 *Type:* ${product.type}\n`;
-
-            // if (product.type === "available") {
-            //     text += `📦 *Stock:* ${product.quantity}\n`;
-            // }
-
-            text += `\n📝 *Description:*\n${product.description || "_No description available._"}`;
-
             // Tạo các nút variant
             const variantButtons = [];
 
             variants.forEach(v => {
-                const label = `${v.variant_name} - ${Number(v.price).toLocaleString()}$`;
+                const label = `${v.variant_name} - ${Number(v.price).toLocaleString()}$ (x${v.quantity}) `;
                 // callback này tuỳ bạn, mình đặt là USER_VARIANT_<id> để sau này handle chi tiết biến thể
                 variantButtons.push(
-                    Markup.button.callback(label, `USER_VARIANT_${v.id}`)
+                    Markup.button.callback(label, `BUY_VARIANT_${v.id}`)
                 );
             });
 
             // Chia nút variant thành từng hàng 1–2 nút
             const rows = [];
-            for (let i = 0; i < variantButtons.length; i += 2) {
-                rows.push(variantButtons.slice(i, i + 2));
+            for (let i = 0; i < variantButtons.length; i += 1) {
+                rows.push(variantButtons.slice(i, i + 1));
             }
 
             // Thêm nút Back

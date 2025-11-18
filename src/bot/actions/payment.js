@@ -29,8 +29,8 @@ export default (bot) => {
             return;
         }
 
-        const quantity = Number(variant.quantity) || 1;
-        const unitPrice = Number(product.price) || 0;
+        const quantity = Number(variant.currenQuan) || 1;
+        const unitPrice = Number(variant.price) || 0;
         const totalPayment = quantity * unitPrice;
 
         // Kiểm tra số dư

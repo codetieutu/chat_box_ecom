@@ -15,8 +15,8 @@ const showProducts = async (ctx, page, command = { dir: "", back: "" }) => {
 
         // ==== Tạo nút chọn sản phẩm (5 cột / hàng) ====
         const buttonRows = [];
-        for (let i = 0; i < products.length; i += 2) {
-            const rowButtons = products.slice(i, i + 2).map((p, idx) =>
+        for (let i = 0; i < products.length; i += 1) {
+            const rowButtons = products.slice(i, i + 1).map((p, idx) =>
                 Markup.button.callback(`${p.name}`, `${command.dir}${p.id}`)
             );
             buttonRows.push(rowButtons);

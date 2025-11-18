@@ -27,7 +27,7 @@ export default (bot) => {
             text += `💰 *Price:* ${Number(variant.price).toLocaleString()}$\n`;
             text += `📦 *Type:* ${product.type}\n`;
             text += `📊 *Stock:* ${variant.quantity}\n`;
-            text += `\n📝 *Description:*\n${product.description || "_No description available._"}`;
+            text += `\n📝 *Description:*\n${variant.description || "_No description available._"}`;
 
             // Inline buttons: Buy + Back
             const keyboard = Markup.inlineKeyboard([

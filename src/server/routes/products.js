@@ -112,15 +112,10 @@ router.get('/variants/:id', async (req, res) => {
 router.post('/variants/:id', async (req, res, next) => {
     const productId = parseInt(req.params.id, 10);
     const { variants = [], new_variants = [] } = req.body;
-
-    console.log(">>check body", req.body);
-
-    // check new variant rỗng
     if (new_variants.length > 0 && new_variants[0].variant_name != '') {
-        console.log("createVariant activate");
         try {
             for (const variant of new_variants) {
-                // variant.product_id = productId; 
+                variant.product_id = productId;
                 await createVariant(variant);
                 res.redirect('/products');
             }
@@ -133,7 +128,7 @@ router.post('/variants/:id', async (req, res, next) => {
 
     try {
         for (const variant of variants) {
-            await updateVariant(variant.id, { name: variant.name, price: variant.price });
+            await updateVariant(variant.id, { name: variant.name, price: variant.price, description: variant.description });
             res.redirect('/products');
         }
     }

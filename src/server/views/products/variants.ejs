@@ -37,23 +37,6 @@
             </div>
         </div>
 
-        <!-- Warehouse Settings -->
-        <!-- <div class="card mb-4">
-            <div class="card-body">
-                <h5 class="card-title">Warehouse Management</h5>
-                <div class="form-check form-switch mb-3">
-                    <input class="form-check-input" type="checkbox" id="usePrivateWarehouse">
-                    <label class="form-check-label" for="usePrivateWarehouse">
-                        Use private warehouse (This setting requires you to have a private warehouse server and provide
-                        API for the marketplace)
-                    </label>
-                </div>
-                <div class="text-muted">
-                    <strong>Store:</strong> Sản phẩm ADOBE bản quyền full app - 100GB
-                </div>
-            </div>
-        </div> -->
-
         <!-- Variants Table -->
         <div class="card">
             <div class="card-body">
@@ -62,10 +45,11 @@
                         <table class="table table-striped table-hover">
                             <thead>
                                 <tr>
-                                    <th width="300">Variant Name</th>
-                                    <th width="150">Price</th>
-                                    <th width="120">Status</th>
-                                    <th width="120">Stock</th>
+                                    <th width="250">Variant Name</th>
+                                    <th width="200">Description</th>
+                                    <th width="120">Price</th>
+                                    <th width="100">Status</th>
+                                    <th width="100">Stock</th>
                                     <th width="150" class="text-center">Actions</th>
                                 </tr>
                             </thead>
@@ -78,6 +62,11 @@
                                                 value="<%= variant.variant_name %>" required>
                                             <input type="hidden" name="variants[<%= index %>][id]"
                                                 value="<%= variant.id %>">
+                                        </td>
+                                        <td>
+                                            <textarea class="form-control" rows="2"
+                                                name="variants[<%= index %>][description]"
+                                                placeholder="Variant description"><%= variant.description || '' %></textarea>
                                         </td>
                                         <td>
                                             <input type="number" class="form-control" min="0" step="any"
@@ -123,6 +112,11 @@
                                             <td>
                                                 <input type="text" class="form-control"
                                                     name="new_variants[0][variant_name]" placeholder="New variant name">
+                                            </td>
+                                            <td>
+                                                <textarea class="form-control" rows="2"
+                                                    name="new_variants[0][description]"
+                                                    placeholder="Variant description"></textarea>
                                             </td>
                                             <td>
                                                 <input type="number" class="form-control" name="new_variants[0][price]"
@@ -171,6 +165,11 @@
                 <input type="text" class="form-control" 
                        name="new_variants[${variantCount}][variant_name]" 
                        placeholder="New variant name">
+            </td>
+            <td>
+                <textarea class="form-control" rows="2"
+                    name="new_variants[${variantCount}][description]" 
+                    placeholder="Variant description"></textarea>
             </td>
             <td>
                 <input type="number" class="form-control" 
