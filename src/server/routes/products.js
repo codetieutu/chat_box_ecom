@@ -1,5 +1,5 @@
 import express from 'express';
-import { deleteProduct, getAllProducts, getProductById, updateProduct } from '../../utils/productUtil.js';
+import { createProduct, deleteProduct, getAllProducts, getProductById, updateProduct } from '../../utils/productUtil.js';
 import { createVariant, deleteVariant, getVariantById, getVariantsByProduct } from '../../utils/variantUtil.js';
 import { addStock } from '../../utils/stockUtil.js';
 const router = express.Router();
@@ -59,17 +59,21 @@ router.get('/edit/:id', async (req, res) => {
 
 
 // Add product
-router.post('/add', (req, res) => {
-    const newProduct = {
-        id: products.length + 1,
-        name: req.body.name,
-        description: req.body.description,
-        type: req.body.type,
-        price: parseInt(req.body.price) || 0,
-        stock: parseInt(req.body.stock) || 0
-    };
-    products.push(newProduct);
-    res.redirect('/products');
+router.post('/add', async (req, res) => {
+    try {
+        const newProduct = {
+            name: req.body.name,
+            description: req.body.description,
+            type: req.body.type,
+            price: parseFloat(req.body.price) || 0,
+            stock: 0
+        };
+        await createProduct(newProduct);
+        res.redirect('/products');
+    } catch (error) {
+        console.log(error);
+    }
+
 });
 
 // Update product
