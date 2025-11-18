@@ -70,7 +70,7 @@
                                                     <% } %>
                                         </h6>
                                         <div class="price text-primary fw-bold">
-                                            <%= variantItem.price.toLocaleString() %> VND
+                                            <%= variantItem.price.toLocaleString() %> $
                                         </div>
                                         <div class="stock-info">
                                             <span
@@ -121,7 +121,7 @@
                                 <div class="col-md-4">
                                     <strong>Price:</strong><br>
                                     <span class="fw-bold">
-                                        <%= variant.price.toLocaleString() %> VND
+                                        <%= variant.price.toLocaleString() %> $
                                     </span>
                                 </div>
                                 <div class="col-md-4">
@@ -155,7 +155,7 @@
                                             <option value="<%= variantItem.id %>" data-stock="<%= variantItem.stock %>"
                                                 data-name="<%= variantItem.name %>"
                                                 <%=selectedVariantId===variantItem.id ? 'selected' : '' %>>
-                                                <%= variantItem.name %> - <%= variantItem.price.toLocaleString() %> VND
+                                                <%= variantItem.name %> - <%= variantItem.price.toLocaleString() %> $
                                                         (Current: <%= variantItem.stock %>)
                                             </option>
                                             <% }); %>
