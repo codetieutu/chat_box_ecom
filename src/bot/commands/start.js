@@ -39,6 +39,11 @@ function createMenuKeyboard() {
             // Markup.button.callback("🤖 Bot Info", "BOT_INFO"),
             Markup.button.callback("💰 Deposit", "DEPOSIT"),
         ],
+        [
+            // Markup.button.callback("🤖 Bot Info", "BOT_INFO"),
+            Markup.button.callback("📦 Stock product", "STOCK_PRODUCTS"),
+        ]
+
     ]);
 }
 

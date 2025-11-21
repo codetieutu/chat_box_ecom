@@ -210,8 +210,13 @@ Dear customers, RESTOCK NOTIFICATION🚨
 });
 
 router.get('/delete/variant/:id', async (req, res) => {
-    res.redirect('/products');
-    await deleteVariant(req.params.id);
+    try {
+        res.redirect('/products');
+        await deleteVariant(req.params.id);
+    } catch (error) {
+        console.log(">>check error", error);
+    }
+
 })
 // Delete product
 router.post('/delete/:id', async (req, res) => {

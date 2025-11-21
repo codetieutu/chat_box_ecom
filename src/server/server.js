@@ -6,6 +6,7 @@ import productsRouter from './routes/products.js';
 import usersRouter from './routes/users.js';
 import ordersRouter from './routes/orders.js';
 import expressEjsLayouts from 'express-ejs-layouts';
+import { PORT } from '../utils/env.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -31,9 +32,9 @@ app.use('/products', productsRouter);
 app.use('/users', usersRouter);
 app.use('/orders', ordersRouter);
 
-const PORT = 8080;
+
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`Server on http://localhost:${PORT}`);
 });
 
 export default app;

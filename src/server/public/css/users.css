@@ -97,6 +97,123 @@
     border-radius: 6px;
 }
 
+.page-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1.5rem 0;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 25px;
+    padding: 0.3rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.search-icon {
+    padding: 0 0.8rem;
+    color: #6c757d;
+    font-size: 1rem;
+}
+
+.search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 0.6rem 0;
+    font-size: 0.9rem;
+    background: transparent;
+    color: #333;
+}
+
+.search-input::placeholder {
+    color: #adb5bd;
+}
+
+.search-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 0.6rem 1.5rem;
+    border-radius: 20px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+.search-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/* Focus effects */
+.search-container:focus-within {
+    background: white;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .page-header {
+        padding: 1rem 0;
+    }
+
+    .search-container {
+        flex-direction: column;
+        border-radius: 15px;
+        padding: 0.8rem;
+        gap: 0.8rem;
+    }
+
+    .search-input {
+        width: 100%;
+        text-align: center;
+        padding: 0.8rem;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .search-btn {
+        width: 100%;
+        padding: 0.8rem;
+        border-radius: 15px;
+    }
+
+    .search-icon {
+        display: none;
+    }
+
+    .h2 {
+        font-size: 1.5rem;
+    }
+}
+
+/* Animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.search-container {
+    animation: fadeInUp 0.5s ease-out;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .users-table {

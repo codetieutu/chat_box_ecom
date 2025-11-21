@@ -53,12 +53,15 @@ const getUserById = async (id) => {
     }
 };
 
-const getUserByUsername = async (username) => {
+const getUserByUsername = async (searchTerm) => {
     try {
-        const [rows] = await db.query("SELECT * FROM users WHERE username = ?", [username]);
-        return rows.length > 0 ? rows[0] : null;
+        const [rows] = await db.query(
+            "SELECT * FROM users WHERE username LIKE ?",
+            [`%${searchTerm}%`]
+        );
+        return rows;
     } catch (error) {
-        console.error("❌ Lỗi khi lấy user theo username:", error);
+        console.error("❌ Lỗi khi tìm kiếm users:", error);
         throw error;
     }
 };

@@ -1,16 +1,29 @@
 <!-- Page Header -->
 <div class="page-header">
     <div class="container-fluid">
-        <div class="row align-items-center">
+        <!-- Title Row -->
+        <div class="row align-items-center mb-3">
             <div class="col">
                 <h1 class="h2 mb-0"><i class="fas fa-users me-2"></i>User Management</h1>
                 <p class="mb-0 opacity-75">Manage user accounts and balances</p>
             </div>
-            <!-- <div class="col-auto">
-                <a href="/users/add" class="btn add-user-btn">
-                    <i class="fas fa-plus me-2"></i>Add New User
-                </a>
-            </div> -->
+        </div>
+
+        <!-- Search Row -->
+        <div class="row align-items-center">
+            <div class="col">
+                <form id="searchForm" action="/users/search" method="GET" class="search-form">
+                    <div class="search-container">
+                        <div class="search-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <input type="text" class="search-input" name="search" placeholder="Search users by username">
+                        <button type="submit" class="search-btn">
+                            <i class="fas fa-search me-1"></i>Search
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>

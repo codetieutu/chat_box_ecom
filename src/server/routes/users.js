@@ -1,5 +1,5 @@
 import express from 'express';
-import { getUserAll, getUserById, updateUser } from '../../utils/userUtil.js';
+import { getUserAll, getUserById, getUserByUsername, updateUser } from '../../utils/userUtil.js';
 const router = express.Router();
 
 
@@ -27,6 +27,31 @@ router.get('/deposit/:id', async (req, res) => {
         pageCss: 'users.css'
     });
 });
+
+router.get('/search', async (req, res) => {
+    try {
+        const searchQuery = req.query.search || '';
+        let users = [];
+
+        if (searchQuery) {
+            // Sử dụng hàm searchUsers mới
+            users = await getUserByUsername(searchQuery);
+        }
+
+        res.render('users/list', {
+            title: 'User Management',
+            active: 'users',
+            users: users,
+            pageCss: 'users.css',
+        });
+
+    } catch (error) {
+        console.error('Error in users route:', error);
+        res.status(500).render('error', {
+            message: 'Internal Server Error'
+        });
+    }
+})
 
 // Process deposit
 router.post('/deposit/:id', async (req, res) => {
