@@ -285,3 +285,16 @@ export async function deleteOrder(id) {
     return result.affectedRows > 0;
 }
 
+export async function getTotalTransaction() {
+    try {
+        const [rows] = await db.execute(`
+        SELECT COUNT(*) AS total_orders
+        FROM orders
+    `);
+        return rows[0].total_orders;
+    } catch (error) {
+        console.error(">>check error", error);
+        throw error;
+    }
+
+}

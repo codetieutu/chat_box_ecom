@@ -1,6 +1,7 @@
 import { Markup } from "telegraf";
-import { addUser, getUserById } from "../../utils/userUtil.js";
+import { addUser, getTotalUser, getUserById } from "../../utils/userUtil.js";
 import path from "path";
+import { getTotalTransaction } from "../../utils/orderUtil.js";
 
 // Hàm escape HTML an toàn
 function escapeHtml(text) {
@@ -14,9 +15,10 @@ function escapeHtml(text) {
 }
 
 // Tạo caption menu với HTML formatting
-function createMenuCaption(user) {
+function createMenuCaption(user, totalTransaction, totalUser) {
     const fullName = `${escapeHtml(user.first_name)} ${escapeHtml(user.last_name || "")}`.trim();
     const username = user.username ? `@${escapeHtml(user.username)}` : 'no username';
+
 
     return `
 👋 — <b>Hello ${fullName}</b> 🛠️
@@ -24,7 +26,9 @@ function createMenuCaption(user) {
 <b>User Details:</b>
 ╰ Username : ${username}
 ╰ Balance : ${user.balance} $
-╰ Transaction : ${user.transaction}
+🤖 About bot:
+╰ Total Transactions : ${totalTransaction}
+╰ Total Users : ${totalUser}
 `.trim();
 }
 
@@ -49,8 +53,9 @@ function createMenuKeyboard() {
 
 const showMenu = async (ctx, u, edit = false, media = false) => {
     const logoPath = path.join(process.cwd(), "assets/logo.png");
-
-    const caption = createMenuCaption(u);
+    const totalTransaction = await getTotalTransaction();
+    const totalUser = await getTotalUser();
+    const caption = createMenuCaption(u, totalTransaction, totalUser);
     const keyboard = createMenuKeyboard();
 
     const messageOptions = {
