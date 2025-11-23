@@ -98,10 +98,10 @@
                                                     <i class="fas fa-boxes"></i>
                                                 </a>
                                                 <!-- Delete Button -->
-                                                <a href="/products/delete/variant/<%=variant.id %>"
-                                                    class="btn btn-danger" title="Delete">
+                                                <button type="button" class="btn btn-danger" title="Delete"
+                                                    onclick="showDeleteModal('<%= variant.id %>', '<%= variant.variant_name %>')">
                                                     <i class="fas fa-trash"></i>
-                                                </a>
+                                                </button>
                                             </div>
                                         </td>
                                     </tr>
@@ -153,8 +153,42 @@
         </div>
     </div>
 </div>
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete variant "<span id="variantName"></span>"?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">delete</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
+    let currentVariantId = null;
+
+    function showDeleteModal(variantId, variantName) {
+        currentVariantId = variantId;
+        document.getElementById('variantName').textContent = variantName;
+
+        const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+        modal.show();
+    }
+
+    // Xử lý khi click nút xác nhận xóa
+    document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
+        if (currentVariantId) {
+            window.location.href = `/products/delete/variant/${currentVariantId}`;
+        }
+    });
     let variantCount = 1;
 
     function addNewVariant() {

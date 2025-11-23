@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAllOrders, getOrderById, updateOrder } from '../../utils/orderUtil.js';
+import { getAllOrders, getMonthRevenue, getOrderById, updateOrder } from '../../utils/orderUtil.js';
 import { notifyUser } from '../../bot/sendMess.js'
 import { getUserById, updateUser } from '../../utils/userUtil.js';
 const router = express.Router();
@@ -7,6 +7,10 @@ const router = express.Router();
 // Order list
 router.get('/', async (req, res) => {
     const orders = await getAllOrders();
+    const now = new Date();
+    const month = now.getMonth() + 1;
+    const year = now.getFullYear();
+    orders.Total_Revenue = await getMonthRevenue(month, year)
     res.render('orders/list', {
         title: 'Order Management',
         active: 'orders',
