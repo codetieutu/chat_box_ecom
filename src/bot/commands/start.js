@@ -2,6 +2,7 @@ import { Markup } from "telegraf";
 import { addUser, getTotalUser, getUserById } from "../../utils/userUtil.js";
 import path from "path";
 import { getTotalTransaction } from "../../utils/orderUtil.js";
+import fs from "fs";
 
 // Hàm escape HTML an toàn
 function escapeHtml(text) {
@@ -53,6 +54,7 @@ function createMenuKeyboard() {
 
 const showMenu = async (ctx, u, edit = false, media = false) => {
     const logoPath = path.join(process.cwd(), "assets/logo.png");
+    const buffer = fs.readFileSync(logoPath);
     const totalTransaction = await getTotalTransaction();
     const totalUser = await getTotalUser();
     const caption = createMenuCaption(u, totalTransaction, totalUser);
@@ -85,7 +87,7 @@ const showMenu = async (ctx, u, edit = false, media = false) => {
         } else {
             // Khi /start → gửi tin nhắn mới
             await ctx.replyWithPhoto(
-                { source: logoPath },
+                { source: buffer },
                 {
                     caption,
                     parse_mode: "HTML",
