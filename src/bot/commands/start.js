@@ -25,6 +25,7 @@ function createMenuCaption(user, totalTransaction, totalUser) {
 👋 — <b>Hello ${fullName}</b> 🛠️
 
 <b>User Details:</b>
+╰ ID : ${user.id}
 ╰ Username : ${username}
 ╰ Balance : ${user.balance} $
 🤖 About bot:
@@ -124,7 +125,7 @@ export default (bot) => {
             transaction
         }
         const u = await addUser(user);
-        // ╰ ID : <code>${user.id}</code>
+
         // <b>BOT Statistic:</b>
         // ╰ Produk Terjual: 165,882 Akun
         // ╰ Total User: 1809

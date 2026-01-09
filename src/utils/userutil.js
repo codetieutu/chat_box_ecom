@@ -55,9 +55,10 @@ const getUserById = async (id) => {
 
 const getUserByUsername = async (searchTerm) => {
     try {
+        searchTerm = searchTerm.startsWith("@") ? searchTerm.slice(1) : searchTerm
         const [rows] = await db.query(
-            "SELECT * FROM users WHERE username LIKE ?",
-            [`%${searchTerm}%`]
+            "SELECT * FROM users WHERE username LIKE ? or id = ?",
+            [`%${searchTerm}%`, searchTerm]
         );
         return rows;
     } catch (error) {
