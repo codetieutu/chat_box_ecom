@@ -1,6 +1,7 @@
 import axios from "axios";
 import { ethers } from "ethers";
 import { RPC_URL, ADDRESS_WALLET } from "./env.js";
+import { get } from "http";
 
 const TOKENS = {
     USDT: {
@@ -13,7 +14,7 @@ const TOKENS = {
     },
 };
 
-async function getTransactionByHash(txHash, minTimestamp = null) {
+async function getTransactionByHash(txHash, minTimestamp) {
     const result = {
         from: null,
         to: null,
@@ -22,7 +23,7 @@ async function getTransactionByHash(txHash, minTimestamp = null) {
         network: "BNB Smart Chain",
         timestamp: null,
         message: "",
-        status: false, // 👈 thêm trường status mặc định false
+        status: false,
     };
 
     try {
@@ -102,10 +103,13 @@ async function getTransactionByHash(txHash, minTimestamp = null) {
                     minTimestamp instanceof Date
                         ? minTimestamp.getTime() / 1000
                         : minTimestamp;
+
+
                 if (txTimestamp < min) {
                     result.message = "⏰ Giao dịch được thực hiện TRƯỚC thời điểm yêu cầu.";
                     return result;
                 }
+
             }
         }
 
@@ -120,7 +124,7 @@ async function getTransactionByHash(txHash, minTimestamp = null) {
         result.to = toAddress;
         result.amount = amount;
         result.token = tokenSymbol;
-        result.status = true; // 👈 đánh dấu giao dịch hợp lệ
+        result.status = true;
         result.message = "✅ Giao dịch hợp lệ và sau thời gian yêu cầu";
 
         return result;
@@ -130,6 +134,8 @@ async function getTransactionByHash(txHash, minTimestamp = null) {
         return result;
     }
 }
+
+getTransactionByHash("0x55e5897902bb61451772584fced69bc0464d3cbeb5f13de4d6175f9dd157f244", 1768578152).then(result => console.log(result));
 
 export {
     getTransactionByHash

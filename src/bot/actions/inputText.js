@@ -156,38 +156,40 @@ ${content}
 }
 
 const inputTxId = async (ctx) => {
-    const txid = ctx.message.text.trim();
-    const time = ctx.session.time;
-    const transaction = await getTransactionByHash(txid, time);
-    if (!transaction.status) {
-        ctx.reply("Transaction not found, Please re-enter.");
-        return;
-    }
-    transaction.tx_hash = txid;
-    const amount = parseFloat(transaction.amount);
-    const user = await getUserById(ctx.from.id);
-    if (!user) {
-        ctx.reply("error");
-    }
-
-    const newUser = await updateUser(user.id, { balance: parseFloat(user.balance) + parseFloat(amount) });
-
-    await ctx.reply(
-        `✅ *Deposit Successful!*\n\n💰 *Amount:* ${amount}$\n💼 *New Balance:* ${newUser.balance}$`,
-        {
-            parse_mode: "Markdown",
-            ...Markup.inlineKeyboard([
-                [Markup.button.callback("↩️ Back to Home", "SHOW_HOME_MEDIA")],
-            ]),
-        }
-    );
-    const message = `📢 *New Deposit Received!*\n\n👤 User: @${user.username}\n💰 Amount: ${amount} $`;
-
-    await notifyAdmin(message);
     try {
+        const txid = ctx.message.text.trim();
+        const time = ctx.session.time;
+        const transaction = await getTransactionByHash(txid, time);
         await addTransaction(transaction);
+        if (!transaction.status) {
+            ctx.reply("Transaction not found, Please re-enter.");
+            return;
+        }
+        await addTransaction(transaction);
+        transaction.tx_hash = txid;
+        const amount = parseFloat(transaction.amount);
+        const user = await getUserById(ctx.from.id);
+        if (!user) {
+            ctx.reply("error");
+        }
+
+        const newUser = await updateUser(user.id, { balance: parseFloat(user.balance) + parseFloat(amount) });
+
+        await ctx.reply(
+            `✅ *Deposit Successful!*\n\n💰 *Amount:* ${amount}$\n💼 *New Balance:* ${newUser.balance}$`,
+            {
+                parse_mode: "Markdown",
+                ...Markup.inlineKeyboard([
+                    [Markup.button.callback("↩️ Back to Home", "SHOW_HOME_MEDIA")],
+                ]),
+            }
+        );
+        const message = `📢 *New Deposit Received!*\n\n👤 User: @${user.username}\n💰 Amount: ${amount} $`;
+
+        await notifyAdmin(message);
+
     } catch (error) {
-        console.error(">>check err", error);
+        ctx.reply("Transaction have error, Please re-enter.");
     }
 
     ctx.session.time = null

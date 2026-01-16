@@ -20,7 +20,7 @@ const addTransaction = async (tx) => {
 
         if (rows.length > 0) {
             console.log(`⚠️ Giao dịch ${tx_hash} đã tồn tại.`);
-            return rows[0];
+            throw new Error("Giao dịch đã tồn tại");
         }
 
         // Nếu chưa có thì thêm mới
