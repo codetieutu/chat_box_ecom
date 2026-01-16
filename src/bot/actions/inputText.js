@@ -160,7 +160,6 @@ const inputTxId = async (ctx) => {
         const txid = ctx.message.text.trim();
         const time = ctx.session.time;
         const transaction = await getTransactionByHash(txid, time);
-        await addTransaction(transaction);
         if (!transaction.status) {
             ctx.reply("Transaction not found, Please re-enter.");
             return;
