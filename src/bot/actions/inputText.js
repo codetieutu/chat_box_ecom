@@ -51,7 +51,7 @@ const inputContent = async (ctx) => {
     const quantity = ctx.session.quantity;
     const product = ctx.session.product;
     const user = await getUserById(ctx.from.id);
-    console.log("check product ", product);
+
     // user_id, product_id, variant_id, quantity, unit_price, total_amount, status, note, receiver_name, product_name, seller_note 
     const order = {
         user_id: ctx.from.id,
