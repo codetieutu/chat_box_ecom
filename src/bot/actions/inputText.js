@@ -1,17 +1,12 @@
 import { getUserById, updateUser, addAdmin } from "../../utils/userUtil.js";
-import { showUserDetail } from "./admin/UserAction.js";
 import { ADMIN_PASSWORD } from "../../utils/env.js";
 import { adminMenu } from "../commands/admin.js";
 import { Markup } from "telegraf";
-import { updateProduct } from "../../utils/productUtil.js";
-import { showAdminProduct } from "./admin/detailProduct.js";
 import { getProductByQuantity } from "../../utils/stockUtil.js";
 import { exportProductsToTxt } from "../export.js";
 import { showMenu } from "../commands/start.js";
-import { getOrderById } from "../../utils/orderUtil.js";
-import { notifyAdmin, notifyUser } from "../sendMess.js";
-import { showOrders } from "./admin/showOrder.js";
-import { checkout } from "../../utils/payment.js";
+import { createOrder } from "../../utils/orderUtil.js";
+import { notifyAdmin } from "../sendMess.js";
 import { getTransactionByHash } from "../../utils/payment2.js";
 import { addTransaction } from "../../utils/depositUtil.js";
 
@@ -56,16 +51,35 @@ const inputContent = async (ctx) => {
     const quantity = ctx.session.quantity;
     const product = ctx.session.product;
     const user = await getUserById(ctx.from.id);
+    console.log("check product ", product);
+    // user_id, product_id, variant_id, quantity, unit_price, total_amount, status, note, receiver_name, product_name, seller_note 
     const order = {
-        userId: ctx.from.id,
-        productId: product.id,
-        productName: product.name,
+        user_id: ctx.from.id,
+        product_id: product.productId,
+        variant_id: product.id,
         quantity: quantity,
+        unit_price: product.price,
+        total_amount: parseFloat(quantity) * parseFloat(product.price),
+        status: 'pending',
         note: content,
-        totalPrice: parseFloat(quantity) * parseFloat(product.price)
+        receiver_name: user.username || "NoName",
+        product_name: product.name,
+        unit_price: product.price,
+        seller_note: ""
     }
     try {
-        await notifyAdmin(`new order ${product.name}:${quantity}`)
+        createOrder(order);
+        await notifyAdmin(
+            `🛒 *NEW ORDER*
+━━━━━━━━━━━━━━
+👤 Customer: ${order.receiver_name}
+📦 Product: ${order.product_name}
+🔢 Quantity: ${order.quantity}
+💰 Total: ${order.total_amount.toLocaleString()} 
+━━━━━━━━━━━━━━
+⏳ *Status:* Pending`
+        );
+
         const userNew = await updateUser(ctx.from.id, { balance: parseFloat(user.balance) - quantity * parseFloat(product.price), transaction: parseInt(user.transaction) + quantity });
         await ctx.reply("Your order is being processed. Please wait.");
         ctx.session.selectedProduct = null;

@@ -13,16 +13,9 @@ export default (bot) => {
         const userId = ctx.from.id;
         const variantId = Number(ctx.match[1]);
 
-        // Đảm bảo có session & product trong session
         ctx.session = ctx.session || {};
         const variant = ctx.session.product;
         const product = await getProductById(variant.productId);
-        // if (!product || product.id !== variantId) {
-        //     await ctx.reply("⚠️ Session expired or invalid product. Please select the product again.");
-        //     return;
-        // }
-
-        // Lấy user trong DB
         const user = await getUserById(userId);
         if (!user) {
             await ctx.reply("⚠️ User not found in system.");

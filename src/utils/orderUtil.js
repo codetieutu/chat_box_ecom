@@ -153,17 +153,19 @@ export async function getMonthRevenue(month, year) {
  */
 export async function createOrder(order) {
     const {
-        user_id = null,
+        user_id,
         product_id,
-        variant_id = null,
-        quantity = 1,
+        variant_id,
+        quantity,
         unit_price,
-        note = null,
-        receiver_name = null,
-        product_name = null,
-    } = order;
+        total_amount,
+        status,
+        note,
+        receiver_name,
+        product_name,
+        seller_note
 
-    const total_amount = quantity * unit_price;
+    } = order;
 
     const [result] = await db.execute(
         `INSERT INTO orders (
@@ -176,8 +178,11 @@ export async function createOrder(order) {
         status,
         note,
         receiver_name,
-        product_name
-     ) VALUES (?, ?, ?, ?, ?, ?, 'pending', ?, ?, ?)`,
+        product_name,
+        seller_note,
+        created_at,
+        updated_at
+     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())`,
         [
             user_id,
             product_id,
@@ -185,9 +190,11 @@ export async function createOrder(order) {
             quantity,
             unit_price,
             total_amount,
+            status,
             note,
             receiver_name,
             product_name,
+            seller_note,
         ]
     );
 

@@ -65,10 +65,11 @@ router.post('/add', async (req, res) => {
         const newProduct = {
             name: req.body.name,
             description: req.body.description,
-            type: req.body.type,
+            type: req.body.category,
             price: parseFloat(req.body.price) || 0,
             stock: 0
         };
+
         await createProduct(newProduct);
         res.redirect('/products');
     } catch (error) {
@@ -129,6 +130,7 @@ router.post('/variants/:id', async (req, res, next) => {
                 variant.product_id = productId;
                 await createVariant(variant);
                 res.redirect('/products');
+                return;
             }
         }
         catch (error) {
@@ -141,6 +143,7 @@ router.post('/variants/:id', async (req, res, next) => {
         for (const variant of variants) {
             await updateVariant(variant.id, { name: variant.name, price: variant.price, description: variant.description });
             res.redirect('/products');
+            return;
         }
     }
     catch (error) {

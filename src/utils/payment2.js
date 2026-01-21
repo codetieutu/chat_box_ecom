@@ -135,8 +135,6 @@ async function getTransactionByHash(txHash, minTimestamp) {
     }
 }
 
-getTransactionByHash("0x55e5897902bb61451772584fced69bc0464d3cbeb5f13de4d6175f9dd157f244", 1768578152).then(result => console.log(result));
-
 export {
     getTransactionByHash
 }

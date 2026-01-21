@@ -1,5 +1,6 @@
 import { Markup } from "telegraf";
 import { getVariantById } from "../../utils/variantUtil.js";
+import { getProductById } from "../../utils/productUtil.js";
 
 export default (bot) => {
 
@@ -9,6 +10,7 @@ export default (bot) => {
 
         const variantId = Number(ctx.match[1]);
         const variant = await getVariantById(variantId);
+        const product = await getProductById(variant.product_id);
 
         if (!variant) {
             await ctx.reply("❌ Variant not found.");
@@ -22,7 +24,7 @@ export default (bot) => {
         const state = {
             id: variant.id,
             productId: variant.product_id,
-            name: variant.variant_name,
+            name: `${product.name} - ${variant.variant_name}`,
             price: Number(variant.price) || 0,
             quantity: Number(variant.quantity) || 0, // stock
             type: variant.type || "available",
