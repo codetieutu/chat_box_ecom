@@ -30,9 +30,13 @@
 
                     <!-- Product Type -->
                     <div class="mb-3">
-                        <label for="type" class="form-label">Product Type</label>
-                        <input type="text" class="form-control" id="type" value="<%= product.type %>" readonly disabled>
-                        <div class="form-text">Product type cannot be changed</div>
+                        <label for="category" class="form-label">Category</label>
+                        <select class="form-select" id="category" name="category" required>
+                            <option value="">Select Category</option>
+                            <option value="available" <%=product.type==='available' ? 'selected' : '' %>>available
+                            </option>
+                            <option value="preorder" <%=product.type==='preorder' ? 'selected' : '' %>>preorder</option>
+                        </select>
                     </div>
 
                     <!-- Description -->

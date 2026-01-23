@@ -81,9 +81,9 @@ router.post('/add', async (req, res) => {
 // Update product
 router.post('/edit/:id', async (req, res) => {
     const productId = req.params.id;
-    const { name, description } = req.body;
+    const { name, category, description } = req.body;
     try {
-        await updateProduct(productId, { name, description });
+        await updateProduct(productId, { name, type: category, description });
         res.redirect('/products');
     } catch (err) {
         console.log(err);
