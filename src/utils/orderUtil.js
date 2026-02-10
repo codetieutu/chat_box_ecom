@@ -153,18 +153,17 @@ export async function getMonthRevenue(month, year) {
  */
 export async function createOrder(order) {
     const {
-        user_id,
-        product_id,
-        variant_id,
-        quantity,
-        unit_price,
-        total_amount,
-        status,
-        note,
-        receiver_name,
-        product_name,
-        seller_note
-
+        user_id = null,
+        product_id = null,
+        variant_id = null,
+        quantity = null,
+        unit_price = null,
+        total_amount = null,
+        status = null,
+        note = null,
+        receiver_name = null,
+        product_name = null,
+        seller_note = null,
     } = order;
 
     const [result] = await db.execute(
