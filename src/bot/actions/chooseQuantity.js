@@ -27,7 +27,7 @@ export default (bot) => {
             name: `${product.name} - ${variant.variant_name}`,
             price: Number(variant.price) || 0,
             quantity: Number(variant.quantity) || 0, // stock
-            type: variant.type || "available",
+            type: product.type || "available",
             description: variant.description,
             currenQuan: 1,                            // số lượng mặc định
             backAction: `USER_PRODUCT_${variant.product_id}` // callback quay lại màn product

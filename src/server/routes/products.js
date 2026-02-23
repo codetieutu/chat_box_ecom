@@ -110,7 +110,6 @@ router.get('/variants/:id', async (req, res) => {
 });
 
 router.get('/variants/:id/stock', async (req, res) => {
-    console.log("activate");
     const variantId = req.params.id;
 
     // Mock variants data - bạn có thể lấy từ database

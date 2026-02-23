@@ -10,13 +10,13 @@ export default (bot) => {
     bot.action(/PAYMENT_(\d+)/, async (ctx) => {
         await ctx.answerCbQuery();
 
-        const userId = ctx.from.id;
         const variantId = Number(ctx.match[1]);
 
         ctx.session = ctx.session || {};
         const variant = ctx.session.product;
-        const product = await getProductById(variant.productId);
-        const user = await getUserById(userId);
+        const product = ctx.session.product;
+        const userId = ctx.from.id;
+        const user = await getUserById(ctx.from.id);
         if (!user) {
             await ctx.reply("⚠️ User not found in system.");
             return;
@@ -71,16 +71,21 @@ export default (bot) => {
         });
 
         // Lưu order với trạng thái success
-        const orderId = await createOrder({
-            user_id: String(userId),
-            product_id: product.id,
-            variant_id: variant.id,
+        const order = {
+            user_id: ctx.from.id,
+            product_id: product.productId,
+            variant_id: product.id,
             quantity: quantity,
-            unit_price: unitPrice,
-            note: `Auto delivery via Telegram bot. Stocks: ${stocks.length}`,
-            receiver_name: user.username || ctx.from.username || `tg_${userId}`,
-            product_name: product.name
-        });
+            unit_price: product.price,
+            total_amount: parseFloat(quantity) * parseFloat(product.price),
+            status: 'pending',
+            note: "Auto delivery via Telegram bot.",
+            receiver_name: user.username || "NoName",
+            product_name: product.name,
+            unit_price: product.price,
+            seller_note: ""
+        }
+        const orderId = await createOrder(order);
 
         // Cập nhật status = success (createOrder mặc định pending)
         await updateOrderStatus(orderId, "success");
