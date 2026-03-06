@@ -1,7 +1,8 @@
+<!-- views/products/edit-variants.ejs -->
 <div class="row">
     <div class="col-12">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1>Edit Variants</h1>
+            <h1 class="mb-0">Edit Variants</h1>
             <a href="/products" class="btn btn-secondary">
                 <i class="fas fa-arrow-left"></i> Back to Products
             </a>
@@ -11,6 +12,7 @@
 
 <div class="row">
     <div class="col-12">
+
         <!-- Product Info -->
         <div class="card mb-4">
             <div class="card-body">
@@ -25,7 +27,8 @@
                         <%= product.name %>
                     </div>
                     <div class="col-md-3">
-                        <strong>Type:</strong> <span class="badge bg-info">
+                        <strong>Type:</strong>
+                        <span class="badge bg-info">
                             <%= product.type %>
                         </span>
                     </div>
@@ -40,64 +43,63 @@
         <!-- Variants Table -->
         <div class="card">
             <div class="card-body">
-                <form action="/products/variants/<%= product.id %>" method="POST">
+
+                <!-- Không submit form kiểu cũ, chỉ dùng để giữ layout -->
+                <form id="variantsForm" onsubmit="return false;">
                     <div class="table-responsive">
-                        <table class="table table-striped table-hover">
+                        <table class="table table-striped table-hover align-middle">
                             <thead>
                                 <tr>
                                     <th width="250">Variant Name</th>
-                                    <th width="200">Description</th>
-                                    <th width="120">Price</th>
-                                    <th width="100">Status</th>
-                                    <th width="100">Stock</th>
-                                    <th width="150" class="text-center">Actions</th>
+                                    <th width="220">Description</th>
+                                    <th width="140">Price</th>
+                                    <th width="160">Duration (Days)</th>
+                                    <th width="120">Stock</th>
+                                    <th width="160" class="text-center">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <% variants.forEach((variant, index)=> { %>
-                                    <tr>
+
+                            <tbody id="variantsTbody">
+                                <% (variants || []).forEach((variant)=> { %>
+                                    <tr data-variant-row="existing">
                                         <td>
-                                            <input type="text" class="form-control"
-                                                name="variants[<%= index %>][variant_name]"
+                                            <input type="hidden" class="variant_id" value="<%= variant.id %>">
+                                            <input type="text" class="form-control variant_name"
                                                 value="<%= variant.variant_name %>" required>
-                                            <input type="hidden" name="variants[<%= index %>][id]"
-                                                value="<%= variant.id %>">
                                         </td>
+
                                         <td>
-                                            <textarea class="form-control" rows="2"
-                                                name="variants[<%= index %>][description]"
+                                            <textarea class="form-control description" rows="2"
                                                 placeholder="Variant description"><%= variant.description || '' %></textarea>
                                         </td>
+
                                         <td>
-                                            <input type="number" class="form-control" min="0" step="any"
-                                                name="variants[<%= index %>][price]" value="<%= variant.price %>"
-                                                required>
+                                            <input type="number" class="form-control price" min="0" step="any"
+                                                value="<%= variant.price %>" required>
                                         </td>
-                                        <td>
-                                            <select class="form-control" name="variants[<%= index %>][status]">
-                                                <option value="A" <%=variant.status==='A' ? 'selected' : '' %>>Active
-                                                </option>
-                                                <option value="I" <%=variant.status==='I' ? 'selected' : '' %>>Inactive
-                                                </option>
-                                            </select>
+
+                                        <td class="duration-col">
+                                            <input type="number" class="form-control duration" min="1" step="1"
+                                                value="<%= variant.min %>" required>
+                                            -
+                                            <input type="number" class="form-control duration" min="1" step="1"
+                                                value="<%= variant.max %>" required>
                                         </td>
+
                                         <td>
-                                            <span class="badge <%= variant.stock > 0 ? 'bg-success' : 'bg-warning' %>">
-                                                <%= variant.quantity %>
+                                            <span
+                                                class="badge <%= (variant.quantity || 0) > 0 ? 'bg-success' : 'bg-warning' %>">
+                                                <%= variant.quantity || 0 %>
                                             </span>
                                         </td>
+
                                         <td class="text-center">
                                             <div class="btn-group btn-group-sm">
-                                                <!-- Save Button -->
-                                                <button type="button" class="btn btn-success" title="Save">
-                                                    <i class="fas fa-check"></i>
-                                                </button>
-
                                                 <a href="/products/stock-upload/<%= product.id %>?variant=<%= variant.id %>"
                                                     class="btn btn-info" title="Add Stock">
                                                     <i class="fas fa-boxes"></i>
                                                 </a>
-                                                <!-- Delete Button -->
+
                                                 <button type="button" class="btn btn-danger" title="Delete"
                                                     onclick="showDeleteModal('<%= variant.id %>', '<%= variant.variant_name %>')">
                                                     <i class="fas fa-trash"></i>
@@ -107,131 +109,193 @@
                                     </tr>
                                     <% }); %>
 
-                                        <!-- Add New Variant Row -->
-                                        <tr>
-                                            <td>
-                                                <input type="text" class="form-control"
-                                                    name="new_variants[0][variant_name]" placeholder="New variant name">
-                                            </td>
-                                            <td>
-                                                <textarea class="form-control" rows="2"
-                                                    name="new_variants[0][description]"
-                                                    placeholder="Variant description"></textarea>
-                                            </td>
-                                            <td>
-                                                <input type="number" class="form-control" name="new_variants[0][price]"
-                                                    min="0" step="any" placeholder="Price">
-                                            </td>
-                                            <td>
-                                                <select class="form-control" name="new_variants[0][status]">
-                                                    <option value="A">Active</option>
-                                                    <option value="I">Inactive</option>
-                                                </select>
-                                            </td>
-                                            <td>
-                                                <span class="badge bg-secondary">0</span>
-                                            </td>
-                                            <td class="text-center">
-                                                <button type="button" class="btn btn-primary btn-sm"
-                                                    onclick="addNewVariant()">
-                                                    <i class="fas fa-plus"></i> Add
-                                                </button>
-                                            </td>
-                                        </tr>
+                                        <!-- New rows will be appended here by JS -->
                             </tbody>
                         </table>
                     </div>
 
-                    <div class="d-grid gap-2 mt-3">
-                        <button type="submit" class="btn btn-primary">
+                    <div class="d-flex gap-2 mt-3">
+                        <button type="button" class="btn btn-outline-primary" onclick="addNewVariantRow()">
+                            <i class="fas fa-plus"></i> Add row
+                        </button>
+                    </div>
+
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="button" class="btn btn-primary" onclick="submitVariants()">
                             <i class="fas fa-save"></i> Save All Changes
                         </button>
                         <a href="/products" class="btn btn-outline-secondary">Cancel</a>
                     </div>
                 </form>
+
             </div>
         </div>
     </div>
 </div>
+
 <!-- Delete Confirmation Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1">
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Confirm deletion</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <p>Are you sure you want to delete variant "<span id="variantName"></span>"?</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">cancel</button>
-                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">delete</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
+    // =========================
+    // Delete modal logic
+    // =========================
     let currentVariantId = null;
 
     function showDeleteModal(variantId, variantName) {
         currentVariantId = variantId;
         document.getElementById('variantName').textContent = variantName;
 
-        const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+        const modalEl = document.getElementById('deleteModal');
+        const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
         modal.show();
     }
 
-    // Xử lý khi click nút xác nhận xóa
     document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
         if (currentVariantId) {
             window.location.href = `/products/delete/variant/${currentVariantId}`;
         }
     });
-    let variantCount = 1;
 
-    function addNewVariant() {
-        variantCount++;
-        const newRow = `
-        <tr>
-            <td>
-                <input type="text" class="form-control" 
-                       name="new_variants[${variantCount}][variant_name]" 
-                       placeholder="New variant name">
-            </td>
-            <td>
-                <textarea class="form-control" rows="2"
-                    name="new_variants[${variantCount}][description]" 
-                    placeholder="Variant description"></textarea>
-            </td>
-            <td>
-                <input type="number" class="form-control" 
-                 min="0" step="any"
-                       name="new_variants[${variantCount}][price]" 
-                       placeholder="Price">
-            </td>
-            <td>
-                <select class="form-control" name="new_variants[${variantCount}][status]">
-                    <option value="A">Active</option>
-                    <option value="I">Inactive</option>
-                </select>
-            </td>
-            <td>
-                <span class="badge bg-secondary">0</span>
-            </td>
-            <td class="text-center">
-                <button type="button" class="btn btn-danger btn-sm" onclick="removeVariant(this)">
-                    <i class="fas fa-times"></i>
-                </button>
-            </td>
-        </tr>
+    // =========================
+    // Add new row
+    // =========================
+    function addNewVariantRow() {
+        const tbody = document.getElementById('variantsTbody');
+
+        const rowHtml = `
+      <tr data-variant-row="new">
+        <td>
+          <input type="hidden" class="variant_id" value="">
+          <input type="text" class="form-control variant_name" placeholder="New variant name">
+        </td>
+
+        <td>
+          <textarea class="form-control description" rows="2" placeholder="Variant description"></textarea>
+        </td>
+
+        <td>
+          <input type="number" class="form-control price" min="0" step="any" placeholder="Price">
+        </td>
+
+        <td class="duration-col">
+                                            <input type="number" class="form-control duration" min="1" step="1"
+                                                  placeholder="Min" required>
+                                            -
+                                            <input type="number" class="form-control duration" min="1" step="1"
+                                                 placeholder="Max" required>
+                                        </td>
+
+        <td>
+          <span class="badge bg-secondary">0</span>
+        </td>
+
+        <td class="text-center">
+          <button type="button" class="btn btn-danger btn-sm" onclick="removeVariantRow(this)" title="Remove row">
+            <i class="fas fa-times"></i>
+          </button>
+        </td>
+      </tr>
     `;
 
-        document.querySelector('tbody').insertAdjacentHTML('beforeend', newRow);
+        tbody.insertAdjacentHTML('beforeend', rowHtml);
     }
 
-    function removeVariant(button) {
-        button.closest('tr').remove();
+    function removeVariantRow(btn) {
+        btn.closest('tr')?.remove();
+    }
+
+    // =========================
+    // Build array + send JSON
+    // =========================
+    async function submitVariants() {
+        const match = window.location.pathname.match(/\/products\/variants\/(\d+)/);
+        const productId = match ? match[1] : null;
+        const rows = document.querySelectorAll('#variantsTbody tr[data-variant-row]');
+        const variants = [];
+
+        rows.forEach(tr => {
+            const idRaw = tr.querySelector('.variant_id')?.value?.trim();
+            const id = idRaw ? idRaw : null;
+
+            const variant_name = tr.querySelector('.variant_name')?.value?.trim() || '';
+            const description = tr.querySelector('.description')?.value?.trim() || '';
+
+            const priceRaw = tr.querySelector('.price')?.value;
+            const min = tr.querySelector('.duration:nth-child(1)')?.value;
+            const max = tr.querySelector('.duration:nth-child(2)')?.value;
+
+            // Nếu dòng mới mà trống toàn bộ => bỏ qua
+            const isEmpty =
+                !id &&
+                !variant_name &&
+                !description &&
+                (priceRaw === '' || priceRaw == null) &&
+                (min === '' || min == null) &&
+                (max === '' || max == null);
+
+            if (isEmpty) return;
+
+            variants.push({
+                id, // null => create, có id => update
+                variant_name,
+                description,
+                price: priceRaw === '' ? null : Number(priceRaw),
+                min: min === '' ? null : Number(min),
+                max: max === '' ? null : Number(max),
+            });
+        });
+
+        // validate nhanh phía client
+        for (const v of variants) {
+            if (!v.variant_name) {
+                alert('Variant name is required');
+                return;
+            }
+            if (v.price == null || Number.isNaN(v.price)) {
+                alert('Price is invalid');
+                return;
+            }
+            if (v.min == null || Number.isNaN(v.min) || v.min < 1) {
+                alert('Min duration must be >= 1 day');
+                return;
+            }
+            if (v.max == null || Number.isNaN(v.max) || v.max < 1) {
+                alert('Max duration must be >= 1 day');
+                return;
+            }
+        }
+
+        const payload = { variants };
+
+
+        try {
+            const res = await fetch(`/products/variants/${productId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+            });
+
+            window.location.reload();
+        } catch (err) {
+            console.error(err);
+            alert('Network error!');
+        }
     }
 </script>

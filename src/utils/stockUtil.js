@@ -1,11 +1,13 @@
 import { db } from "./database.js";
-// import { updateProductQuantity } from "./productUtil.js";
+
 
 // Thêm item mới vào stock
-const addStock = async (productId, info) => {
+const addStock = async (productId, info, expireAt) => {
+
+
     const [result] = await db.query(
-        "INSERT INTO stocks (product_id, info) VALUES (?, ?)",
-        [productId, info]
+        "INSERT INTO stocks (product_id, info, expireAt) VALUES (?, ?, ?)",
+        [productId, info, expireAt]
     );
 
     // Tăng số lượng trong bảng products
@@ -29,6 +31,12 @@ const markStockAsSold = async (stockId) => {
 const deleteStock = async (stockId) => {
     await db.query("DELETE FROM stocks WHERE id = ?", [stockId]);
 };
+
+const deleteStocks = async (stockIds, oldId) => {
+    const placeholders = stockIds.map(() => '?').join(',');
+    await db.query(`DELETE FROM stocks WHERE id IN (${placeholders})`, stockIds);
+    await db.query("update product_variants set quantity = GREATEST(quantity - ?, 0) where id = ?", [stockIds.length, oldId]);
+}
 
 export const getProductByQuantity = async (variantId, quantity) => {
     try {
@@ -62,11 +70,34 @@ export const getProductByQuantity = async (variantId, quantity) => {
     }
 };
 
+const updateVariantId = async (stockIds, variantId, oldVariantId) => {
+    const placeholders = stockIds.map(() => '?').join(',');
+
+    await db.query(
+        `UPDATE stocks 
+         SET product_id = ? 
+         WHERE id IN (${placeholders})`,
+        [variantId, ...stockIds]
+    );
+    await db.query(
+        `UPDATE product_variants 
+         SET quantity = quantity + ?
+         WHERE id = ?`,
+        [stockIds.length, variantId]
+    );
+    await db.query(
+        `UPDATE product_variants 
+         SET quantity = GREATEST(quantity - ?, 0)
+         WHERE id = ?`,
+        [stockIds.length, oldVariantId]
+    );
+};
 
 export {
     addStock,
     getStocksByProduct,
     markStockAsSold,
     deleteStock,
-
+    deleteStocks,
+    updateVariantId
 }

@@ -158,3 +158,10 @@
     min-height: 60px;
     font-size: 0.875rem;
 }
+
+.duration-col {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 78px;
+}

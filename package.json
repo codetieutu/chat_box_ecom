@@ -16,12 +16,14 @@
     "axios": "^1.13.1",
     "body-parser": "^2.2.0",
     "crypto": "^1.0.1",
+    "dayjs": "^1.11.19",
     "dotenv": "^17.2.3",
     "ejs": "^3.1.10",
     "ethers": "^6.15.0",
     "express": "^5.1.0",
     "express-ejs-layouts": "^2.5.1",
     "mysql2": "^3.15.3",
+    "node-cron": "^4.2.1",
     "nodemon": "^3.1.10",
     "telegraf": "^4.16.3"
   }

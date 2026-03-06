@@ -46,7 +46,6 @@ export const notifyAllUsers = async (message) => {
             }
         }
 
-        console.log("✔️ Broadcast completed.");
     } catch (err) {
         console.error("❌ notifyAllUsers error:", err);
     }

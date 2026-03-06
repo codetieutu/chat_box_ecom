@@ -120,32 +120,21 @@ router.get('/variants/:id/stock', async (req, res) => {
 
 
 // Update variants
-router.post('/variants/:id', async (req, res, next) => {
+router.post('/variants/:id', async (req, res) => {
     const productId = parseInt(req.params.id, 10);
-    const { variants = [], new_variants = [] } = req.body;
-    if (new_variants.length > 0 && new_variants[0].variant_name != '') {
-        try {
-            for (const variant of new_variants) {
-                variant.product_id = productId;
-                await createVariant(variant);
-                res.redirect('/products');
-                return;
-            }
-        }
-        catch (error) {
-            console.log(error);
-            throw error;
-        }
-    }
+    const { variants = [] } = req.body;
 
     try {
         for (const variant of variants) {
-            await updateVariant(variant.id, { name: variant.name, price: variant.price, description: variant.description });
-            res.redirect('/products');
-            return;
+            if (!variant.id) {
+                variant.product_id = productId;
+                await createVariant(variant);
+            } else {
+                await updateVariant(variant);
+            }
         }
-    }
-    catch (error) {
+        res.redirect('/products');
+    } catch (error) {
         console.log(error);
         throw error;
     }
@@ -173,13 +162,14 @@ router.post('/stock-upload/:id', async (req, res) => {
     let d = 0;
     try {
 
-        const stocks = stockData
+        const lines = stockData
             .replace(/\r/g, '')
             .split('\n')
             .filter(line => line.trim() !== '');
 
-        for (const stock of stocks) {
-            await addStock(variantId, stock);
+        for (const line of lines) {
+            const data = line.split("|");
+            await addStock(variantId, data[0], data[1]);
             d++;
         }
 

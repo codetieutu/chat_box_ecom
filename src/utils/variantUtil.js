@@ -27,10 +27,11 @@ export async function getVariantById(id) {
  * Tạo biến thể mới
  */
 export async function createVariant(variant) {
-    const { product_id, description, variant_name, quantity = 0, price = 0 } = variant;
+    const { product_id, description, variant_name, quantity = 0, price = 0, min, max } = variant;
+    if (!min || !max) throw new Error("Min and max values are required for a variant");
     const [res] = await db.execute(
-        "INSERT INTO product_variants (product_id, description, variant_name, quantity, price) VALUES (?, ?, ?, ?, ?)",
-        [product_id, description, variant_name, quantity, price]
+        "INSERT INTO product_variants (product_id, description, variant_name, quantity, price, min, max) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        [product_id, description, variant_name, quantity, price, min, max]
     );
 
     return res.insertId;
@@ -39,27 +40,26 @@ export async function createVariant(variant) {
 /**
  * Cập nhật biến thể (dynamic fields update)
  */
-export async function updateVariant(id, data) {
-    const fields = [];
-    const values = [];
+export async function updateVariant(variant) {
 
-    const allowed = ["variant_name", "description", "quantity", "price"];
+    const { id, ...data } = variant;
 
-    for (const key of Object.keys(data)) {
-        if (allowed.includes(key)) {
-            fields.push(`${key} = ?`);
-            values.push(data[key]);
-        }
-    }
+    const sql = `UPDATE product_variants SET 
+                variant_name = ?,
+                description = ?,
+                price = ?,
+                min = ?,
+                max = ?
+                WHERE id = ?`;
 
-    if (fields.length === 0) {
-        throw new Error("No valid fields to update");
-    }
-
-    values.push(id);
-
-    const sql = `UPDATE product_variants SET ${fields.join(", ")} WHERE id = ?`;
-
+    const values = [
+        data.variant_name || null,
+        data.description || null,
+        data.price || 0,
+        data.min || null,
+        data.max || null,
+        id
+    ];
     const [result] = await db.execute(sql, values);
     return result.affectedRows > 0;
 }
